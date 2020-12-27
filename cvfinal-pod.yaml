@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+   name: cvfinal
+   labels:
+     app: cvfinal
+spec:   
+   volumes:
+     - name: test-volume
+       hostPath:
+         path: /mnt/cvFinal
+         type: Directory 
+   containers:
+     - name: cvfinal
+       image: jimmy92049/cvfinal
+       command: ["/bin/sh", "-c"]
+       args: 
+         - echo starting;
+           cd /tmp;
+           cp server.crt /usr/share/ca-certificates/;
+           update-ca-certificates;
+           python3 flaskFinal.py
+           tail -f /dev/null;
+       ports:
+         - containerPort: 443  
+       volumeMounts:
+         - mountPath: /tmp
+           name: test-volume         
+   restartPolicy: Never
+
+         
